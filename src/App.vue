@@ -12,7 +12,10 @@ export default {
       selectedCountry: "Global",
       confirmed:0,
       deaths:0,
-      recovered:0
+      recovered:0,
+      newconfirmed:0,
+      newdeaths:0,
+      newrecovered:0
     };
   },
   filters: {
@@ -29,7 +32,11 @@ export default {
     getSummary() {
       axios.get("https://api.covid19api.com/summary").then((res) => {
         const data= res.data
+        console.log(data)
         this.data = data;
+        this.newconfirmed=data.Global.NewConfirmed
+        this.newdeaths=data.Global.NewDeaths
+        this.newrecovered=data.Global.NewRecovered
         this.confirmed=data.Global.TotalConfirmed
         this.deaths=data.Global.TotalDeaths
         this.recovered=data.Global.TotalRecovered
@@ -47,6 +54,9 @@ export default {
         this.confirmed=data[0].TotalConfirmed
         this.deaths=data[0].TotalDeaths
         this.recovered=data[0].TotalRecovered
+         this.newconfirmed=data[0].NewConfirmed
+        this.newdeaths=data[0].NewDeaths
+        this.newrecovered=data[0].NewRecovered
               
       })
       .catch((error) => {
@@ -54,10 +64,14 @@ export default {
       });
     },
     getCountryInfo(){
+      if(this.selectedCountry=="Global") return this.getSummary()
       const data = this.data.Countries.filter(item=>item.Slug==this.selectedCountry)
         this.confirmed=data[0].TotalConfirmed
         this.deaths=data[0].TotalDeaths
         this.recovered=data[0].TotalRecovered
+        this.newconfirmed=data[0].NewConfirmed
+        this.newdeaths=data[0].NewDeaths
+        this.newrecovered=data[0].NewRecovered
     }
 
   },
@@ -109,6 +123,22 @@ export default {
         <span class="badge badge-danger d-flex flex-column"
           ><span> Recovered</span>
           <span class="span mt-3">{{ recovered | numberFormat}}</span></span
+        >
+      </div>
+      <div class="mt-4 row d-flex justify-content-between main-container">
+        <span class="badge badge-primary d-flex flex-column"
+          ><span> New Cases</span>
+          <span class="span mt-3">{{
+            newconfirmed | numberFormat
+          }}</span></span
+        >
+        <span class="badge badge-success d-flex flex-column"
+          ><span>New Deaths</span>
+          <span class="span mt-3">{{ newdeaths | numberFormat }}</span></span
+        >
+        <span class="badge badge-danger d-flex flex-column"
+          ><span>New Recovered</span>
+          <span class="span mt-3">{{ newrecovered | numberFormat}}</span></span
         >
       </div>
       <div class="row mt-5">

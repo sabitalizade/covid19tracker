@@ -30,7 +30,6 @@ export default {
       axios.get("https://api.covid19api.com/summary").then((res) => {
         const data= res.data
         this.data = data;
-        // console.log(this.data)
         this.confirmed=data.Global.TotalConfirmed
         this.deaths=data.Global.TotalDeaths
         this.recovered=data.Global.TotalRecovered
@@ -44,19 +43,11 @@ export default {
         let res = response.data;
 
         const data = this.data.Countries.filter(item=>item.Slug==res.country_name.toLowerCase())
-      // console.log(data)
         this.selectedCountry=res.country_name
         this.confirmed=data[0].TotalConfirmed
         this.deaths=data[0].TotalDeaths
         this.recovered=data[0].TotalRecovered
-       
-        // setlocation(res.country_name.toLowerCase());
-
-        // const newdata = data.filter(
-        //   (item) => item.Slug === res.country_name.toLowerCase()
-        // );
-
-       
+              
       })
       .catch((error) => {
         console.log(error);
@@ -64,7 +55,6 @@ export default {
     },
     getCountryInfo(){
       const data = this.data.Countries.filter(item=>item.Slug==this.selectedCountry)
-      // console.log(data)
         this.confirmed=data[0].TotalConfirmed
         this.deaths=data[0].TotalDeaths
         this.recovered=data[0].TotalRecovered

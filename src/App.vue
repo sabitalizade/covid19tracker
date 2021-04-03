@@ -1,14 +1,10 @@
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
 import axios from "axios";
 
-// console.log(this.selectedCountry)
 
 export default {
   name: "App",
-  components: {
-    // HelloWorld
-  },
+ 
   data() {
     return {
       countries: {},
@@ -41,9 +37,34 @@ export default {
 
       });
     },
+    getLocation(){
+      axios
+      .get("https://ipapi.co/json/")
+      .then((response) => {
+        let res = response.data;
+
+        const data = this.data.Countries.filter(item=>item.Slug==res.country_name.toLowerCase())
+      // console.log(data)
+        this.selectedCountry=res.country_name
+        this.confirmed=data[0].TotalConfirmed
+        this.deaths=data[0].TotalDeaths
+        this.recovered=data[0].TotalRecovered
+       
+        // setlocation(res.country_name.toLowerCase());
+
+        // const newdata = data.filter(
+        //   (item) => item.Slug === res.country_name.toLowerCase()
+        // );
+
+       
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    },
     getCountryInfo(){
       const data = this.data.Countries.filter(item=>item.Slug==this.selectedCountry)
-      console.log(data)
+      // console.log(data)
         this.confirmed=data[0].TotalConfirmed
         this.deaths=data[0].TotalDeaths
         this.recovered=data[0].TotalRecovered
@@ -77,6 +98,13 @@ export default {
         </select>
       </div>
       <h1 class="display-4">{{selectedCountry.toUpperCase()}}</h1>
+       <div
+          class="badge badge-primary p-3"
+          style="cursor: pointer"
+          @click="getLocation"
+        >
+          Get your Country Information
+        </div>
       <div class="mt-4 row d-flex justify-content-between main-container">
         <span class="badge badge-primary d-flex flex-column"
           ><span> Confirmed</span>
